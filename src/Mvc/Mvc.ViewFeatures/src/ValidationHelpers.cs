@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Microsoft.AspNetCore.Mvc.ViewFeatures
@@ -21,6 +22,19 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
 
             // Default in the ValidationSummary case is no error message.
             return string.Empty;
+        }
+
+        public static HtmlString GetModelHtmlErrorMessageOrDefault(ModelError modelError)
+        {
+            Debug.Assert(modelError != null);
+
+            if (!string.IsNullOrEmpty(modelError.ErrorMessage))
+            {
+                return modelError.HtmlErrorMessage;
+            }
+
+            // Default in the ValidationSummary case is no error message.
+            return HtmlString.Empty;
         }
 
         public static string GetModelErrorMessageOrDefault(

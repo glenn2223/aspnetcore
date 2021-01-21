@@ -945,11 +945,19 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
                 {
                     var modelError = modelState.Errors[i];
                     var errorText = ValidationHelpers.GetModelErrorMessageOrDefault(modelError);
+                    var htmlErrorText = ValidationHelpers.GetModelHtmlErrorMessageOrDefault(modelError);
 
                     if (!string.IsNullOrEmpty(errorText))
                     {
                         var listItem = new TagBuilder("li");
-                        listItem.InnerHtml.SetContent(errorText);
+                        if (htmlErrorText != HtmlString.Empty)
+                        {
+                            listItem.InnerHtml.SetHtmlContent(errorText.ToString());
+                        }
+                        else
+                        {
+                            listItem.InnerHtml.SetContent(errorText);
+                        }
                         htmlSummary.InnerHtml.AppendLine(listItem);
                         isHtmlSummaryModified = true;
                     }

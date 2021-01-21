@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNetCore.Html;
 
 namespace Microsoft.AspNetCore.Mvc.ModelBinding
 {
@@ -41,6 +42,16 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
         }
 
         /// <summary>
+        /// Initializes a new instance of <see cref="ModelError"/> with the specified <paramref name="errorMessage"/>.
+        /// </summary>
+        /// <param name="errorMessage">The HTML error message.</param>
+        public ModelError(HtmlString? errorMessage)
+        {
+            ErrorMessage = errorMessage?.ToString() ?? string.Empty;
+            HtmlErrorMessage = errorMessage;
+        }
+
+        /// <summary>
         /// Gets the <see cref="System.Exception"/> associated with this <see cref="ModelError"/> instance.
         /// </summary>
         public Exception? Exception { get; }
@@ -49,5 +60,10 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
         /// Gets the error message associated with this <see cref="ModelError"/> instance.
         /// </summary>
         public string ErrorMessage { get; }
+
+        /// <summary>
+        /// Gets the HTML error message associated with this <see cref="ModelError"/> instance.
+        /// </summary>
+        public HtmlString? HtmlErrorMessage { get; }
     }
 }

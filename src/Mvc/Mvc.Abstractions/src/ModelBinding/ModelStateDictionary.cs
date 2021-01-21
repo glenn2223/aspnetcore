@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
@@ -368,6 +369,69 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
         /// See <see cref="MaxAllowedErrors"/>.
         /// </returns>
         public bool TryAddModelError(string key, string errorMessage)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (errorMessage == null)
+            {
+                throw new ArgumentNullException(nameof(errorMessage));
+            }
+
+            if (ErrorCount >= MaxAllowedErrors - 1)
+            {
+                EnsureMaxErrorsReachedRecorded();
+                return false;
+            }
+
+            ErrorCount++;
+            var modelState = GetOrAddNode(key);
+            Count += !modelState.IsContainerNode ? 0 : 1;
+            modelState.ValidationState = ModelValidationState.Invalid;
+            modelState.MarkNonContainerNode();
+            modelState.Errors.Add(errorMessage);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Adds the specified <paramref name="errorMessage"/>, in a HTML format, to the
+        /// <see cref="ModelStateEntry.Errors"/> instance that is associated with the specified
+        /// <paramref name="key"/>. If the maximum number of allowed errors has already been recorded,
+        /// ensures that a <see cref="TooManyModelErrorsException"/> exception is recorded instead.
+        /// </summary>
+        /// <param name="key">The key of the <see cref="ModelStateEntry"/> to add errors to.</param>
+        /// <param name="errorMessage">The error message to add.</param>
+        public void AddModelError(string key, HtmlString errorMessage)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (errorMessage == null)
+            {
+                throw new ArgumentNullException(nameof(errorMessage));
+            }
+
+            TryAddModelError(key, errorMessage);
+        }
+
+        /// <summary>
+        /// Attempts to add the specified <paramref name="errorMessage"/>, in a HTML format, to the
+        /// <see cref="ModelStateEntry.Errors"/> instance that is associated with the specified
+        /// <paramref name="key"/>. If the maximum number of allowed errors has already been recorded,
+        /// ensures that a <see cref="TooManyModelErrorsException"/> exception is recorded instead.
+        /// </summary>
+        /// <param name="key">The key of the <see cref="ModelStateEntry"/> to add errors to.</param>
+        /// <param name="errorMessage">The HTML error message to add.</param>
+        /// <returns>
+        /// <c>True</c> if the given error was added, <c>false</c> if the error was ignored.
+        /// See <see cref="MaxAllowedErrors"/>.
+        /// </returns>
+        public bool TryAddModelError(string key, HtmlString errorMessage)
         {
             if (key == null)
             {

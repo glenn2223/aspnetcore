@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Html;
 
 namespace Microsoft.AspNetCore.Mvc.ModelBinding
 {
@@ -30,6 +31,20 @@ namespace Microsoft.AspNetCore.Mvc.ModelBinding
         /// </summary>
         /// <param name="errorMessage">The error message.</param>
         public void Add(string errorMessage)
+        {
+            if (errorMessage == null)
+            {
+                throw new ArgumentNullException(nameof(errorMessage));
+            }
+
+            Add(new ModelError(errorMessage));
+        }
+
+        /// <summary>
+        /// Adds the specified error message.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        public void Add(HtmlString errorMessage)
         {
             if (errorMessage == null)
             {

@@ -1,1 +1,6 @@
 #nullable enable
+Microsoft.AspNetCore.Mvc.ModelBinding.ModelError.HtmlErrorMessage.get -> Microsoft.AspNetCore.Html.HtmlString?
+Microsoft.AspNetCore.Mvc.ModelBinding.ModelError.ModelError(Microsoft.AspNetCore.Html.HtmlString? errorMessage) -> void
+Microsoft.AspNetCore.Mvc.ModelBinding.ModelErrorCollection.Add(Microsoft.AspNetCore.Html.HtmlString! errorMessage) -> void
+Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary.AddModelError(string! key, Microsoft.AspNetCore.Html.HtmlString! errorMessage) -> void
+Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary.TryAddModelError(string! key, Microsoft.AspNetCore.Html.HtmlString! errorMessage) -> bool
